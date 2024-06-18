@@ -1,94 +1,41 @@
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class Admin extends User {
-    private ArrayList<Reservation> bookingList = new ArrayList<>();
-    private ArrayList<Bus> busList = new ArrayList<>();
-    private ArrayList<Route> routeList = new ArrayList<>();
+    private ArrayList<Route> routeList;
+    private ArrayList<Bus> busList;
+    private ArrayList<Reservation> bookingList;
+    private String staffID;
 
-    public Admin(String id, String name, String pwd, String email, int phoneNo) {
-        super(id, name, pwd, email, phoneNo);
+    public Admin(String name, String pwd, String email, int phoneNo, String staffID) {
+        super(name, pwd, email, phoneNo);
+        this.staffID = staffID;
+        routeList = new ArrayList<>();
+        busList = new ArrayList<>();
+        bookingList = new ArrayList<>();
     }
 
-    // Bus management
-    public void addBus(Bus bus) {
-        busList.add(bus);
-        JOptionPane.showMessageDialog(null, "Bus added.");
+    public void addBus(Bus bus) { busList.add(bus); }
+    public void deleteBus(String busID) { /* Delete bus logic */ }
+    public void viewBus() { /* View bus logic */ }
+
+    public void addRoute(Route route) { routeList.add(route); }
+    public void deleteRoute(String origin, String destination) { /* Delete route logic */ }
+    public void viewRoute() { /* View route logic */ }
+
+    public void viewBooking() { /* View booking logic */ }
+
+    @Override
+    public void updateProfile() {
+        super.updateProfile();
+        // Additional logic specific to Admin, if any
+        JOptionPane.showMessageDialog(null, "Admin profile updated successfully!", "Update Profile", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void deleteBus(String busID) {
-        busList.removeIf(bus -> bus.getBusID().equals(busID));
-        JOptionPane.showMessageDialog(null, "Bus deleted.");
-    }
-
-    public void viewBus() {
-        StringBuilder buses = new StringBuilder();
-        for (Bus bus : busList) {
-            buses.append(bus.toString()).append("\n");
-        }
-        JOptionPane.showMessageDialog(null, buses.toString());
-    }
-
-    // Route management
-    public void addRoute(Route route) {
-        routeList.add(route);
-        JOptionPane.showMessageDialog(null, "Route added.");
-    }
-
-    public void deleteRoute(String origin, String destination) {
-        routeList.removeIf(route -> route.getOrigin().equals(origin) && route.getDestination().equals(destination));
-        JOptionPane.showMessageDialog(null, "Route deleted.");
-    }
-
-    public void viewRoutes() {
-        StringBuilder routes = new StringBuilder();
-        for (Route route : routeList) {
-            routes.append("Origin: ").append(route.getOrigin()).append(", Destination: ").append(route.getDestination()).append(", Price: ").append(route.getPrice()).append("\n");
-        }
-        JOptionPane.showMessageDialog(null, routes.toString());
-    }
-
-    // Schedule management
-    public void addSchedule(Route route, Schedule schedule) {
-        route.addSchedule(schedule);
-        JOptionPane.showMessageDialog(null, "Schedule added.");
-    }
-
-    public void deleteSchedule(Route route, Schedule schedule) {
-        route.removeSchedule(schedule);
-        JOptionPane.showMessageDialog(null, "Schedule deleted.");
-    }
-
-    public void viewSchedules(Route route) {
-        StringBuilder schedules = new StringBuilder();
-        for (Schedule schedule : route.getSchedules()) {
-            schedules.append("Timing: ").append(schedule.getTiming()).append("\n");
-        }
-        JOptionPane.showMessageDialog(null, schedules.toString());
-    }
-
-    // Reservation management (view only)
-    public void viewReservations() {
-        StringBuilder reservations = new StringBuilder();
-        for (Reservation reservation : bookingList) {
-            reservations.append("Reservation ID: ").append(reservation.getReservationID()).append("\n")
-                    .append("Route: ").append(reservation.getRoute().getOrigin()).append(" to ").append(reservation.getRoute().getDestination()).append("\n")
-                    .append("Schedule: ").append(reservation.getSchedule().getTiming()).append("\n")
-                    .append("Seat No: ").append(reservation.getSeatNo()).append("\n")
-                    .append("Price: ").append(reservation.getPrice()).append("\n\n");
-        }
-        JOptionPane.showMessageDialog(null, reservations.toString());
-    }
-
-    public ArrayList<Bus> getBusList() {
-        return busList;
-    }
-
-    public ArrayList<Route> getRouteList() {
-        return routeList;
-    }
-
-    public ArrayList<Reservation> getBookingList() {
-        return bookingList;
+    @Override
+    public void dispProfile() {
+        super.dispProfile();
+        // Additional display logic specific to Admin
+        JOptionPane.showMessageDialog(null, "Staff ID: " + staffID, "Profile Details", JOptionPane.INFORMATION_MESSAGE);
     }
 }

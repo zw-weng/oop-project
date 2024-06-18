@@ -1,46 +1,33 @@
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 public class User {
-    private String id;
-    private String name;
-    private String pwd;
-    private String email;
-    private int phoneNo;
+    protected String name;
+    protected String pwd;
+    protected String email;
+    protected int phoneNo;
 
-    public User(String id, String name, String pwd, String email, int phoneNo) {
-        this.id = id;
+    public User(String name, String pwd, String email, int phoneNo) {
         this.name = name;
         this.pwd = pwd;
         this.email = email;
         this.phoneNo = phoneNo;
     }
 
-    public String getId() {
-        return id;
+    public void setName(String name) { this.name = name; }
+    public void setPwd(String pwd) { this.pwd = pwd; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(int phoneNo) { this.phoneNo = phoneNo; }
+
+    public void updateProfile() {
+        name = JOptionPane.showInputDialog("Enter new name:", name);
+        pwd = JOptionPane.showInputDialog("Enter new password:", pwd);
+        email = JOptionPane.showInputDialog("Enter new email:", email);
+        String phoneStr = JOptionPane.showInputDialog("Enter new phone number:", String.valueOf(phoneNo));
+        phoneNo = Integer.parseInt(phoneStr);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public int getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void login(User user) {
-        JOptionPane.showMessageDialog(null, "User " + getName() + " logged in.");
-    }
-
-    public void updateProfile(User user) {
-        JOptionPane.showMessageDialog(null, "User " + getName() + " updated profile.");
+    public void dispProfile() {
+        String profile = "Name: " + name + "\nEmail: " + email + "\nPhone No: " + phoneNo;
+        JOptionPane.showMessageDialog(null, profile, "User Profile", JOptionPane.INFORMATION_MESSAGE);
     }
 }
