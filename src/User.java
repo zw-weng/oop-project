@@ -13,10 +13,29 @@ public class User {
         this.phoneNo = phoneNo;
     }
 
-    public void setName(String name) { this.name = name; }
-    public void setPwd(String pwd) { this.pwd = pwd; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhone(int phoneNo) { this.phoneNo = phoneNo; }
+    public String getName() {
+        return name;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setName(String name) { 
+        this.name = name; 
+    }
+
+    public void setPwd(String pwd) { 
+        this.pwd = pwd; 
+    }
+
+    public void setEmail(String email) { 
+        this.email = email; 
+    }
+
+    public void setPhone(int phoneNo) { 
+        this.phoneNo = phoneNo; 
+    }
 
     public void updateProfile() {
         name = JOptionPane.showInputDialog("Enter new name:", name);

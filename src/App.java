@@ -1,79 +1,146 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) throws InterruptedException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Program is starting");
-        for (int i = 0; i < 5; i++) {
-            Thread.sleep(100); 
-            System.out.print(".");
-        }
-        System.out.println();
-        System.out.println("Please enter your information:");
-        System.out.print("Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
 
-        Passenger passenger = new Passenger(name, email);
+    public static void main(String[] args) {
+        App app = new App();
+        app.login();
+    }
 
-        // Create some schedules
-        List<Schedule> schedules = new ArrayList<>();
+    private List<Schedule> schedules;
+    private Admin admin;
+    private Passenger passenger;
+
+    public App() {
+        // Initialize schedules
+        schedules = new ArrayList<>();
         schedules.add(new Schedule("10:00 AM", new Route("Start", "End"), 50)); // 50 seats available
         schedules.add(new Schedule("12:00 PM", new Route("Start", "End"), 50)); // 50 seats available
         schedules.add(new Schedule("02:00 PM", new Route("Start", "End"), 50)); // 50 seats available
 
+        // Initialize admin (with some default credentials for simplicity)
+        admin = new Admin("admin", "admin123", "admin@buscompany.com", 123456789, "A001");
+    }
+
+    // Method to handle user login
+    public void login() {
+        String[] options = {"Admin", "Passenger"};
+        int choice = JOptionPane.showOptionDialog(null, "Login as:", "Login",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        if (choice == 0) {
+            loginAdmin();
+        } else if (choice == 1) {
+            loginPassenger();
+        } else {
+            JOptionPane.showMessageDialog(null, "Exiting the application.");
+            System.exit(0);
+        }
+    }
+
+    // Method to handle admin login
+    public void loginAdmin() {
+        String username = JOptionPane.showInputDialog("Enter admin username:");
+        String password = JOptionPane.showInputDialog("Enter admin password:");
+
+        // Add logic for validating admin credentials
+        if (username.equals(admin.getName()) && password.equals(admin.getPwd())) {
+            adminMenu();
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid admin credentials. Exiting the application.");
+            System.exit(0);
+        }
+    }
+
+    // Method to handle passenger login
+    public void loginPassenger() {
+        String name = JOptionPane.showInputDialog("Enter your name:");
+        String email = JOptionPane.showInputDialog("Enter your email:");
+
+        // Create a new Passenger object
+        passenger = new Passenger(name, email);
+
+        passengerMenu();
+    }
+
+    // Method to handle admin menu
+    public void adminMenu() {
         while (true) {
-            System.out.println("Please choose an option:");
-            System.out.println("1. Reserve a bus");
-            System.out.println("2. View available schedule");
-            System.out.println("3. Make a payment");
-            System.out.println("4. View your reservations");
-            System.out.println("5. Exit");
+            String[] options = {"View Bus", "View Routes", "View Bookings", "Logout"};
+            int choice = JOptionPane.showOptionDialog(null, "Choose an option:", "Admin Menu",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
-            int option = scanner.nextInt();
-
-            switch (option) {
+            switch (choice) {
+                case 0:
+                    // Logic to view bus (not implemented in the original code)
+                    admin.viewBus();
+                    break;
                 case 1:
-                    // Display all schedules
-                    System.out.println("Schedule List:");
-                    for (int i = 0; i < schedules.size(); i++) {
-                        System.out.println((i + 1) + ". " + schedules.get(i).timing);
-                    }
+                    // Logic to view routes (not implemented in the original code)
+                    admin.viewRoute();
+                    break;
+                case 2:
+                    // Logic to view bookings (not implemented in the original code)
+                    admin.viewBooking();
+                    break;
+                case 3:
+                    logout();
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid option. Please try again.");
+            }
+        }
+    }
 
-                    System.out.println("Choose a schedule:");
-                    int scheduleChoice = scanner.nextInt();
+    // Method to handle passenger menu
+    public void passengerMenu() {
+        while (true) {
+            String[] options = {"Reserve a Bus", "View Available Schedule", "Make a Payment", "View Reservations", "Logout"};
+            int choice = JOptionPane.showOptionDialog(null, "Choose an option:", "Passenger Menu",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+            switch (choice) {
+                case 0:
+                    // Display all schedules
+                    StringBuilder scheduleList = new StringBuilder("Schedule List:\n");
+                    for (int i = 0; i < schedules.size(); i++) {
+                        scheduleList.append((i + 1)).append(". ").append(schedules.get(i).timing).append("\n");
+                    }
+                    String input = JOptionPane.showInputDialog(scheduleList.toString() + "Choose a schedule:");
+                    int scheduleChoice = Integer.parseInt(input);
 
                     // Create a new booking with the chosen schedule
                     passenger.newBooking(schedules.get(scheduleChoice - 1));
-                    System.out.println("Press Enter to return to the main menu.");
-                    scanner.nextLine(); // Consume newline left-over
-                    scanner.nextLine(); // Wait for user to press Enter
+                    break;
+                case 1:
+                    // View all schedules
+                    Schedule.viewAllSchedules(schedules);
                     break;
                 case 2:
-                    Schedule.viewAllSchedules(schedules);
-                    System.out.println("Press Enter to return to the main menu.");
-                    scanner.nextLine(); // Consume newline left-over
-                    scanner.nextLine(); // Wait for user to press Enter
-                    break;
-                case 3:
-                    Payment payment = new Payment(100.0, passenger);
+                    // Make a payment
+                    String amountStr = JOptionPane.showInputDialog("Enter the payment amount:");
+                    double amount = Double.parseDouble(amountStr);
+                    Payment payment = new Payment(amount, passenger);
                     payment.processPayment();
                     break;
-                case 4:
+                case 3:
+                    // View reservations
                     passenger.viewReservations();
-                    System.out.println("Press Enter to return to the main menu.");
-                    scanner.nextLine(); // Consume newline left-over
-                    scanner.nextLine(); // Wait for user to press Enter
                     break;
-                case 5:
-                    System.out.println("Exiting...");
-                    System.exit(0);
+                case 4:
+                    logout();
+                    return;
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    JOptionPane.showMessageDialog(null, "Invalid option. Please try again.");
             }
         }
+    }
+
+    // Method to handle user logout
+    public void logout() {
+        JOptionPane.showMessageDialog(null, "Logging out...");
+        System.exit(0);
     }
 }
