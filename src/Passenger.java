@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 class Passenger {
     String name;
     String email;
@@ -14,21 +16,46 @@ class Passenger {
 
     void newBooking(Schedule schedule) {
         if (schedule.seatsBooked < schedule.seatLimit) {
-            Reservation reservation = new Reservation(schedule);
-            bookingList.add(reservation);
-            schedule.seatsBooked++;
-            System.out.println("New booking has been created.");
+            // Calculate the total price based on the route (you can add a price field to
+            // the Route class)
+            double totalPrice = schedule.getPrice(); // Adjust this based on your actual implementation
+
+            // Display reservation details
+            String message = "You are reserving a bus for:\n" +
+                    "Route: " + schedule.route + "\n" +
+                    "Date and Time: " + schedule.timing + "\n" +
+                    "Total Price: $" + totalPrice;
+
+            int confirmation = JOptionPane.showConfirmDialog(null, message, "Confirm Reservation",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmation == JOptionPane.YES_OPTION) {
+                // Create the reservation and deduct the balance
+                Reservation reservation = new Reservation(schedule);
+                bookingList.add(reservation);
+                schedule.seatsBooked++;
+                balance -= totalPrice;
+                JOptionPane.showMessageDialog(null, "Reservation successful!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Reservation canceled.");
+            }
         } else {
-            System.out.println("Sorry, this schedule is full. Please choose another schedule.");
+            JOptionPane.showMessageDialog(null, "Sorry, this schedule is full. Please choose another schedule.");
         }
     }
 
     void viewReservations() {
-        System.out.println("Your reservations:");
+        StringBuilder reservationList = new StringBuilder("Your reservations:\n");
         for (Reservation reservation : bookingList) {
-            System.out.println("Reservation ID: " + reservation.id + ", Schedule: " + reservation.schedule.timing);
+            reservationList.append("Reservation ID: ").append(reservation.id)
+                    .append(", Schedule: ").append(reservation.schedule.timing)
+                    .append("\n");
         }
+
+        // Display reservations in both terminal and JOptionPane
+        System.out.println(reservationList);
+        JOptionPane.showMessageDialog(null, reservationList.toString(), "Your Reservations",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
-    
 }

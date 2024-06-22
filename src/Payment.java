@@ -1,3 +1,5 @@
+import javax.swing.JOptionPane;
+
 class Payment {
     double amount;
     Passenger passenger;
@@ -9,10 +11,11 @@ class Payment {
 
     void processPayment() {
         if (passenger.balance >= amount) {
+            // Deduct the payment amount from the balance
             passenger.balance -= amount;
-            System.out.println("Payment of " + amount + " processed. Remaining balance: " + passenger.balance);
+            JOptionPane.showMessageDialog(null, "Payment successful! Remaining balance: $" + passenger.balance);
         } else {
-            System.out.println("Insufficient balance. Please top up your account.");
+            JOptionPane.showMessageDialog(null, "Insufficient balance. Please top up your account.");
         }
     }
 }

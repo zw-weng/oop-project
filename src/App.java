@@ -26,7 +26,7 @@ public class App {
 
     // Method to handle user login
     public void login() {
-        String[] options = {"Admin", "Passenger"};
+        String[] options = { "Admin", "Passenger" };
         int choice = JOptionPane.showOptionDialog(null, "Login as:", "Login",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
@@ -68,7 +68,7 @@ public class App {
     // Method to handle admin menu
     public void adminMenu() {
         while (true) {
-            String[] options = {"View Bus", "View Routes", "View Bookings", "Logout"};
+            String[] options = { "View Bus", "View Routes", "View Bookings", "Logout" };
             int choice = JOptionPane.showOptionDialog(null, "Choose an option:", "Admin Menu",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
@@ -97,16 +97,23 @@ public class App {
     // Method to handle passenger menu
     public void passengerMenu() {
         while (true) {
-            String[] options = {"Reserve a Bus", "View Available Schedule", "Make a Payment", "View Reservations", "Logout"};
+            String[] options = { "Reserve a Bus", "View Available Schedule", "Make a Payment", "View Reservations",
+                    "Logout" };
             int choice = JOptionPane.showOptionDialog(null, "Choose an option:", "Passenger Menu",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
             switch (choice) {
                 case 0:
-                    // Display all schedules
+                    // Display all schedules with route and price
                     StringBuilder scheduleList = new StringBuilder("Schedule List:\n");
                     for (int i = 0; i < schedules.size(); i++) {
-                        scheduleList.append((i + 1)).append(". ").append(schedules.get(i).timing).append("\n");
+                        Schedule schedule = schedules.get(i);
+                        double price = schedule.getPrice(); // Get the price using the getPrice() method
+                        scheduleList.append((i + 1)).append(". ")
+                                .append("Timing: ").append(schedule.timing)
+                                .append(", Route: ").append(schedule.route)
+                                .append(", Price: $").append(price)
+                                .append("\n");
                     }
                     String input = JOptionPane.showInputDialog(scheduleList.toString() + "Choose a schedule:");
                     int scheduleChoice = Integer.parseInt(input);
@@ -115,16 +122,51 @@ public class App {
                     passenger.newBooking(schedules.get(scheduleChoice - 1));
                     break;
                 case 1:
-                    // View all schedules
-                    Schedule.viewAllSchedules(schedules);
+                    // View available schedules
+                    StringBuilder schedule1List = new StringBuilder("Available Schedules:\n");
+                    for (int i = 0; i < schedules.size(); i++) {
+                        Schedule schedule = schedules.get(i);
+                        double price = schedule.getPrice(); // Get the price using the getPrice() method
+                        schedule1List.append((i + 1)).append(". ")
+                                .append("Timing: ").append(schedule.timing)
+                                .append(", Route: ").append(schedule.route)
+                                .append(", Price: $").append(price)
+                                .append("\n");
+                    }
+                    JOptionPane.showMessageDialog(null, schedule1List.toString());
                     break;
+
                 case 2:
+                    // View reservations
+                    StringBuilder reservationList = new StringBuilder("Your Reservations:\n");
+                    for (int i = 0; i < passenger.bookingList.size(); i++) {
+                        Reservation reservation = passenger.bookingList.get(i);
+                        reservationList.append((i + 1)).append(". ")
+                                .append("Schedule: ").append(reservation.schedule.timing)
+                                .append(", Route: ").append(reservation.schedule.route)
+                                .append(", Price: $").append(reservation.schedule.getPrice())
+                                .append("\n");
+                    }
+
+                    JOptionPane.showMessageDialog(null, reservationList.toString());
+
+                    // Check user balance
+                    double currentBalance = passenger.balance;
+                    JOptionPane.showMessageDialog(null, "Your current balance: $" + currentBalance);
+
                     // Make a payment
                     String amountStr = JOptionPane.showInputDialog("Enter the payment amount:");
                     double amount = Double.parseDouble(amountStr);
-                    Payment payment = new Payment(amount, passenger);
-                    payment.processPayment();
+                    if (currentBalance >= amount) {
+                        // Deduct the payment amount from the balance
+                        passenger.balance -= amount;
+                        JOptionPane.showMessageDialog(null,
+                                "Payment successful! Remaining balance: $" + passenger.balance);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Insufficient balance. Please top up your account.");
+                    }
                     break;
+
                 case 3:
                     // View reservations
                     passenger.viewReservations();

@@ -12,6 +12,11 @@ class Schedule {
         this.seatLimit = seatLimit;
     }
 
+    // Fixed price set by the admin
+    double getPrice() {
+        return 50.0; // Adjust as needed
+    }
+
     static void viewAllSchedules(List<Schedule> schedules) {
         System.out.println("Viewing all schedules...");
         for (int i = 0; i < schedules.size(); i++) {
