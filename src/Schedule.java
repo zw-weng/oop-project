@@ -1,16 +1,38 @@
-import java.util.ArrayList;
+import javax.swing.*;
 
-class Schedule {
+public class Schedule {
     private String timing;
+    private Route route;
     private int seatLimit;
-    private int seatsBooked = 0;
-    private Route route; // Reference to the Route object
+    private int seatsAvailable;
 
-    // Constructor with Route reference
-    Schedule(String timing, Route route, int seatLimit) {
+    public Schedule(String timing, Route route, int seatLimit) {
         this.timing = timing;
         this.route = route;
         this.seatLimit = seatLimit;
+        this.seatsAvailable = seatLimit;
+    }
+
+    public void bookSeat(int seats) {
+        if (seatsAvailable >= seats) {
+            seatsAvailable -= seats;
+            JOptionPane.showMessageDialog(null, "Seats booked successfully. Seats available: " + seatsAvailable);
+        } else {
+            JOptionPane.showMessageDialog(null, "Not enough seats available.");
+        }
+    }
+
+    public void cancelSeat(int seats) {
+        if (seats <= seatLimit - seatsAvailable) {
+            seatsAvailable += seats;
+            JOptionPane.showMessageDialog(null, "Seats canceled successfully. Seats available: " + seatsAvailable);
+        } else {
+            JOptionPane.showMessageDialog(null, "No seats to cancel.");
+        }
+    }
+
+    public String getScheduleDetails() {
+        return "Timing: " + timing + ", Seats Available: " + seatsAvailable + "/" + seatLimit;
     }
 
     // Getters and Setters
@@ -22,22 +44,6 @@ class Schedule {
         this.timing = timing;
     }
 
-    public int getSeatLimit() {
-        return seatLimit;
-    }
-
-    public void setSeatLimit(int seatLimit) {
-        this.seatLimit = seatLimit;
-    }
-
-    public int getSeatsBooked() {
-        return seatsBooked;
-    }
-
-    public void setSeatsBooked(int seatsBooked) {
-        this.seatsBooked = seatsBooked;
-    }
-
     public Route getRoute() {
         return route;
     }
@@ -46,23 +52,19 @@ class Schedule {
         this.route = route;
     }
 
-    // Fixed price set by the admin
-    public double getPrice() {
-        return 50.0; // Adjust as needed
+    public int getSeatLimit() {
+        return seatLimit;
     }
 
-    // Static method to view all schedules
-    public static void viewAllSchedules(ArrayList<Schedule> schedules) {
-        System.out.println("Viewing all schedules...");
-        for (int i = 0; i < schedules.size(); i++) {
-            Schedule schedule = schedules.get(i);
-            System.out.println((i + 1) + ". " + schedule.getTiming() +
-                               " - " + schedule.getRoute().getOrigin() + " to " + schedule.getRoute().getDestination());
-        }
+    public void setSeatLimit(int seatLimit) {
+        this.seatLimit = seatLimit;
     }
 
-    // Get schedule details
-    public String getScheduleDetails() {
-        return "Timing: " + timing + ", Seats Booked: " + seatsBooked + "/" + seatLimit;
+    public int getSeatsAvailable() {
+        return seatsAvailable;
+    }
+
+    public void setSeatsAvailable(int seatsAvailable) {
+        this.seatsAvailable = seatsAvailable;
     }
 }

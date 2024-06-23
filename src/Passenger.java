@@ -1,61 +1,93 @@
+import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JOptionPane;
+public class Passenger extends User {
+    private ArrayList<Reservation> reservations;
 
-class Passenger {
-    String name;
-    String email;
-    List<Reservation> bookingList = new ArrayList<>();
-    double balance = 500.0; // Initial balance
-
-    Passenger(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public Passenger(String name, String pwd, String email, int phoneNo) {
+        super(name, pwd, email, phoneNo);
+        this.reservations = new ArrayList<>();
     }
 
-    void newBooking(Schedule schedule) {
-        if (schedule.seatsBooked < schedule.seatLimit) {
-            // Calculate the total price based on the route (you can add a price field to
-            // the Route class)
-            double totalPrice = schedule.getPrice(); // Adjust this based on your actual implementation
+    public void newBooking(ArrayList<Route> routes, ArrayList<Reservation> allReservations) {
+        String origin = JOptionPane.showInputDialog("Enter Route Origin:");
+        String destination = JOptionPane.showInputDialog("Enter Route Destination:");
+        String timing = JOptionPane.showInputDialog("Enter Schedule Timing:");
+        int seats = Integer.parseInt(JOptionPane.showInputDialog("Enter number of seats to book:"));
 
-            // Display reservation details
-            String message = "You are reserving a bus for:\n" +
-                    "Route: " + schedule.route + "\n" +
-                    "Date and Time: " + schedule.timing + "\n" +
-                    "Total Price: $" + totalPrice;
-
-            int confirmation = JOptionPane.showConfirmDialog(null, message, "Confirm Reservation",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (confirmation == JOptionPane.YES_OPTION) {
-                // Create the reservation and deduct the balance
-                Reservation reservation = new Reservation(schedule);
-                bookingList.add(reservation);
-                schedule.seatsBooked++;
-                balance -= totalPrice;
-                JOptionPane.showMessageDialog(null, "Reservation successful!");
+        Route selectedRoute = findRoute(routes, origin, destination);
+        if (selectedRoute != null) {
+            Schedule selectedSchedule = findSchedule(selectedRoute, timing);
+            if (selectedSchedule != null) {
+                String reservationID = "R" + (allReservations.size() + 1);
+                Reservation reservation = new Reservation(reservationID, this, selectedRoute, selectedSchedule, seats);
+                reservation.makeReservation();
+                reservations.add(reservation);
+                allReservations.add(reservation);
             } else {
-                JOptionPane.showMessageDialog(null, "Reservation canceled.");
+                JOptionPane.showMessageDialog(null, "Schedule not found.");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Sorry, this schedule is full. Please choose another schedule.");
+            JOptionPane.showMessageDialog(null, "Route not found.");
         }
     }
 
-    void viewReservations() {
-        StringBuilder reservationList = new StringBuilder("Your reservations:\n");
-        for (Reservation reservation : bookingList) {
-            reservationList.append("Reservation ID: ").append(reservation.id)
-                    .append(", Schedule: ").append(reservation.schedule.timing)
-                    .append("\n");
+    public void viewBooking() {
+        StringBuilder sb = new StringBuilder("Your Bookings:\n");
+        for (Reservation reservation : reservations) {
+            sb.append(reservation.getReservationID()).append(" - ")
+              .append(reservation.getRoute().getOrigin()).append(" to ")
+              .append(reservation.getRoute().getDestination()).append(", ")
+              .append("Schedule: ").append(reservation.getSchedule().getTiming()).append(", ")
+              .append("Seats Booked: ").append(reservation.getTotalSeatsBooked()).append("\n");
         }
-
-        // Display reservations in both terminal and JOptionPane
-        System.out.println(reservationList);
-        JOptionPane.showMessageDialog(null, reservationList.toString(), "Your Reservations",
-                JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, sb.toString());
     }
 
+    public void cancelBooking() {
+        String reservationID = JOptionPane.showInputDialog("Enter Reservation ID to cancel:");
+        Reservation reservation = findReservation(reservationID);
+        if (reservation != null) {
+            reservation.cancelReservation();
+            reservations.remove(reservation);
+        } else {
+            JOptionPane.showMessageDialog(null, "Reservation not found.");
+        }
+    }
+
+    private Route findRoute(ArrayList<Route> routes, String origin, String destination) {
+        for (Route route : routes) {
+            if (route.getOrigin().equals(origin) && route.getDestination().equals(destination)) {
+                return route;
+            }
+        }
+        return null;
+    }
+
+    private Schedule findSchedule(Route route, String timing) {
+        for (Schedule schedule : route.getScheduleList()) {
+            if (schedule.getTiming().equals(timing)) {
+                return schedule;
+            }
+        }
+        return null;
+    }
+
+    private Reservation findReservation(String reservationID) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getReservationID().equals(reservationID)) {
+                return reservation;
+            }
+        }
+        return null;
+    }
+
+    // Getters and Setters
+    public ArrayList<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(ArrayList<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 }

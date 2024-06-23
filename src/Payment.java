@@ -1,21 +1,47 @@
-import javax.swing.JOptionPane;
+import java.util.Date;
+import javax.swing.*;
 
-class Payment {
-    double amount;
-    Passenger passenger;
+public class Payment {
+    private String paymentID;
+    private double amount;
+    private Date paymentDate;
 
-    Payment(double amount, Passenger passenger) {
+    public Payment(String paymentID, double amount) {
+        this.paymentID = paymentID;
         this.amount = amount;
-        this.passenger = passenger;
+        this.paymentDate = new Date();
     }
 
-    void processPayment() {
-        if (passenger.balance >= amount) {
-            // Deduct the payment amount from the balance
-            passenger.balance -= amount;
-            JOptionPane.showMessageDialog(null, "Payment successful! Remaining balance: $" + passenger.balance);
-        } else {
-            JOptionPane.showMessageDialog(null, "Insufficient balance. Please top up your account.");
-        }
+    public void processPayment() {
+        JOptionPane.showMessageDialog(null, "Payment of RM" + amount + " processed successfully.");
+    }
+
+    public String generateReceipt() {
+        return "Receipt:\nPayment ID: " + paymentID + "\nAmount: RM" + amount + "\nDate: " + paymentDate.toString();
+    }
+
+    // Getters and Setters
+    public String getPaymentID() {
+        return paymentID;
+    }
+
+    public void setPaymentID(String paymentID) {
+        this.paymentID = paymentID;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public Date getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
     }
 }
