@@ -23,8 +23,8 @@ public class BusReservationSystem {
         routes.get(0).addSchedule("08:00 AM", 40);
         routes.get(0).addSchedule("02:00 PM", 40);
 
-        buses.add(new Bus("Bus01", "Model X", 40));  // Added capacity
-        buses.add(new Bus("Bus02", "Model Y", 50));  // Added capacity
+        buses.add(new Bus("Bus01", "Model X", 50));
+        buses.add(new Bus("Bus02", "Model Y", 60));
 
         users.add(new Passenger("John Doe", "password", "john@example.com", 123456789));
         admins.add(new Admin("Admin User", "adminpass", "admin@example.com", 987654321, "A001", routes, buses, reservations));
@@ -93,7 +93,7 @@ public class BusReservationSystem {
                     String busID = JOptionPane.showInputDialog("Enter Bus ID:");
                     String model = JOptionPane.showInputDialog("Enter Bus Model:");
                     int capacity = Integer.parseInt(JOptionPane.showInputDialog("Enter Bus Capacity:"));
-                    admin.addBus(new Bus(busID, model, capacity));  // Added capacity
+                    admin.addBus(new Bus(busID, model, capacity));
                 }
                 case 1 -> {
                     String busID = JOptionPane.showInputDialog("Enter Bus ID to delete:");
