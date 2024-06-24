@@ -371,25 +371,28 @@ public class BusReservationSystem {
     private void updateProfile(User user) {
         String[] profileData = user.updateProfileData();
         String newName = showInputDialog("Enter new name:", profileData[0]);
-        if (newName == null)
-            return; // User cancelled
+        if (newName == null) return; // User cancelled
         String newPwd = showInputDialog("Enter new password:", profileData[1]);
-        if (newPwd == null)
-            return; // User cancelled
+        if (newPwd == null) return; // User cancelled
         String newEmail = showInputDialog("Enter new email:", profileData[2]);
-        if (newEmail == null)
-            return; // User cancelled
+        if (newEmail == null) return; // User cancelled
         String newPhoneStr = showInputDialog("Enter new phone number:", profileData[3]);
-        if (newPhoneStr == null)
-            return; // User cancelled
-
+        if (newPhoneStr == null) return; // User cancelled
+        
+        if (user instanceof Admin) {
+            Admin admin = (Admin) user;
+            String newStaffID = showInputDialog("Enter new staff ID:", admin.getStaffID());
+            if (newStaffID == null) return; // User cancelled
+            admin.setStaffID(newStaffID);
+        }
+    
         try {
             user.updateProfile(newName, newPwd, newEmail, newPhoneStr);
             showMessageDialog("Profile updated successfully.");
         } catch (IllegalArgumentException e) {
             showMessageDialog(e.getMessage());
         }
-    }
+    }    
 
     // Methods for interacting with JOptionPane
     public String showInputDialog(String message) {

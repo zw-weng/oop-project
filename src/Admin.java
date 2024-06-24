@@ -17,17 +17,29 @@ public class Admin extends User {
         this.passengerList = passengerList;
     }
 
-    @Override
-    public String dispProfile() {
-        return super.dispProfile() + "\n" + "Staff ID: " + staffID;
+    public void updateProfile(String newName, String newPwd, String newEmail, String newPhoneStr, String newStaffID) {
+        super.updateProfile(newName, newPwd, newEmail, newPhoneStr);
+
+        if (newStaffID != null && !newStaffID.trim().isEmpty()) {
+            setStaffID(newStaffID);
+        }
     }
 
     @Override
-    public void updateProfile(String newName, String newPwd, String newEmail, String newPhoneStr) {
-        super.updateProfile(newName, newPwd, newEmail, newPhoneStr);
-        if (newPhoneStr != null && !newPhoneStr.trim().isEmpty()) {
-            setStaffID(newPhoneStr);
+    public String[] updateProfileData() {
+        String[] data = super.updateProfileData();
+        if (data.length == 4) {
+            String[] updatedData = new String[5];
+            System.arraycopy(data, 0, updatedData, 0, data.length);
+            updatedData[4] = staffID;
+            return updatedData;
         }
+        return data;
+    }
+
+    @Override
+    public String dispProfile() {
+        return super.dispProfile() + "\n" + "Staff ID: " + staffID;
     }
 
     public void addBus(Bus bus) {
