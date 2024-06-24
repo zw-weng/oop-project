@@ -65,17 +65,15 @@ public class Admin extends User {
     }
 
     public String viewBooking() {
-        StringBuilder sb = new StringBuilder("Bookings:\n");
+        StringBuilder sb = new StringBuilder("Current Bookings:\n");
         for (Reservation reservation : bookingList) {
-            sb.append(reservation.getReservationID()).append(" - ")
-              .append(reservation.getPassenger().getName()).append(", ")
-              .append("Route: ").append(reservation.getRoute().getOrigin()).append(" to ").append(reservation.getRoute().getDestination()).append("\n");
+            sb.append(reservation.dispReservationDetails()).append("\n");
         }
         return sb.toString();
     }
 
     public String viewUser() {
-        StringBuilder sb = new StringBuilder("Passengers:\n");
+        StringBuilder sb = new StringBuilder("Passenger Info:\n");
         for (Passenger user : passengerList) {
             sb.append(user.getName()).append(" - Email: ")
               .append(user.getEmail()).append(", Phone No: ")
