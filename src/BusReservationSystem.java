@@ -17,7 +17,7 @@ public class BusReservationSystem {
         seedData();
     }
 
-    private void seedData() {
+    public void seedData() {
         // Seed with some initial data
         Route route1 = new Route("City A", "City B", 50.0);
         Route route2 = new Route("City B", "City C", 75.0);
@@ -60,7 +60,7 @@ public class BusReservationSystem {
         }
     }
 
-    private void adminLogin() {
+    public void adminLogin() {
         while (true) {
             String email = showInputDialog("Enter email:");
             if (email == null) {
@@ -83,7 +83,7 @@ public class BusReservationSystem {
         }
     }
 
-    private Admin authenticateAdmin(String email, String password) {
+    public Admin authenticateAdmin(String email, String password) {
         for (Admin admin : admins) {
             if (admin.getEmail().equals(email) && admin.getPwd().equals(password)) {
                 return admin;
@@ -115,7 +115,7 @@ public class BusReservationSystem {
         } while (choice != 6);
     }
 
-    private void manageBuses(Admin admin) {
+    public void manageBuses(Admin admin) {
         String[] options = { "Add Bus", "Delete Bus", "View Buses", "Back" };
         int choice;
 
@@ -149,7 +149,7 @@ public class BusReservationSystem {
         } while (choice != 3);
     }
 
-    private void manageRoutes(Admin admin) {
+    public void manageRoutes(Admin admin) {
         String[] options = { "Add Route", "Delete Route", "View Routes", "Back" };
         int choice;
 
@@ -186,7 +186,7 @@ public class BusReservationSystem {
         } while (choice != 3);
     }
 
-    private void manageSchedules(Admin admin) {
+    public void manageSchedules(Admin admin) {
         String origin = showInputDialog("Enter Route Origin:");
         if (origin == null)
             return; // User cancelled
@@ -231,7 +231,7 @@ public class BusReservationSystem {
         } while (choice != 3);
     }
 
-    private void passengerLogin() {
+    public void passengerLogin() {
         while (true) {
             String email = showInputDialog("Enter email:");
             if (email == null) {
@@ -254,7 +254,7 @@ public class BusReservationSystem {
         }
     }
 
-    private Passenger authenticatePassenger(String email, String password) {
+    public Passenger authenticatePassenger(String email, String password) {
         for (User user : users) {
             if (user instanceof Passenger && user.getEmail().equals(email) && user.getPwd().equals(password)) {
                 return (Passenger) user;
@@ -286,7 +286,7 @@ public class BusReservationSystem {
         } while (choice != 6);
     }
 
-    private void viewSchedule(Passenger passenger) {
+    public void viewSchedule(Passenger passenger) {
         String origin = showInputDialog("Enter Route Origin:");
         if (origin == null)
             return; // User cancelled
@@ -301,7 +301,16 @@ public class BusReservationSystem {
         }
     }
 
-    private void viewBooking(Passenger passenger) {
+    public Route findRoute(String origin, String destination) {
+        for (Route route : routes) {
+            if (route.getOrigin().equals(origin) && route.getDestination().equals(destination)) {
+                return route;
+            }
+        }
+        return null;
+    }
+
+    public void viewBooking(Passenger passenger) {
         String[] options = { "Payment Receipt", "Ticket", "Back" };
         int choice;
 
@@ -319,7 +328,7 @@ public class BusReservationSystem {
         } while (choice != 2);
     }
 
-    private void newBooking(Passenger passenger) {
+    public void newBooking(Passenger passenger) {
         String origin = showInputDialog("Enter Route Origin:");
         if (origin == null)
             return; // User cancelled
@@ -352,7 +361,7 @@ public class BusReservationSystem {
         } while (choice != 1);
     }
 
-    private void cancelBooking(Passenger passenger) {
+    public void cancelBooking(Passenger passenger) {
         String reservationID = showInputDialog("Enter Reservation ID to cancel:");
         if (reservationID == null)
             return; // User cancelled
@@ -360,7 +369,7 @@ public class BusReservationSystem {
         showMessageDialog("Booking canceled. Please refund it at the counter.");
     }
 
-    private void viewOrUpdateProfile(User user) {
+    public void viewOrUpdateProfile(User user) {
         showMessageDialog(user.dispProfile());
         int choice = showOptionDialog("Do you want to update your profile?", "Profile", new String[] { "Yes", "No" });
         if (choice == 0) {
@@ -368,7 +377,7 @@ public class BusReservationSystem {
         }
     }
 
-    private void updateProfile(User user) {
+    public void updateProfile(User user) {
         String[] profileData = user.updateProfileData();
         String newName = showInputDialog("Enter new name:", profileData[0]);
         if (newName == null) return; // User cancelled
@@ -410,15 +419,6 @@ public class BusReservationSystem {
     public int showOptionDialog(String message, String title, String[] options) {
         return JOptionPane.showOptionDialog(null, message, title, JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-    }
-
-    public Route findRoute(String origin, String destination) {
-        for (Route route : routes) {
-            if (route.getOrigin().equals(origin) && route.getDestination().equals(destination)) {
-                return route;
-            }
-        }
-        return null;
     }
 
     public static void main(String[] args) {

@@ -1,13 +1,13 @@
 public class Reservation {
     private String reservationID;
-    private User passenger;
+    private Passenger passenger;
     private Route route;
     private Schedule schedule;
     private int totalSeatsBooked;
     private Payment payment;
     private Ticket ticket;
 
-    public Reservation(String reservationID, User passenger, Route route, Schedule schedule, int totalSeatsBooked) {
+    public Reservation(String reservationID, Passenger passenger, Route route, Schedule schedule, int totalSeatsBooked) {
         this.reservationID = reservationID;
         this.passenger = passenger;
         this.route = route;
@@ -55,7 +55,7 @@ public class Reservation {
         return passenger;
     }
 
-    public void setPassenger(User passenger) {
+    public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
     }
 
