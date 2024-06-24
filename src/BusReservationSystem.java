@@ -141,8 +141,8 @@ public class BusReservationSystem {
                     String busID = showInputDialog("Enter Bus ID to delete:");
                     if (busID == null)
                         return; // User cancelled
-                    admin.deleteBus(busID);
-                    showMessageDialog("Bus deleted successfully.");
+                    String mesej = admin.deleteBus(busID);
+                    showMessageDialog(mesej);
                 }
                 case 2 -> showMessageDialog(admin.viewBus());
             }
@@ -178,8 +178,8 @@ public class BusReservationSystem {
                     String destination = showInputDialog("Enter Route Destination to delete:");
                     if (destination == null)
                         return; // User cancelled
-                    admin.deleteRoute(origin, destination);
-                    showMessageDialog("Route deleted successfully.");
+                    String mesej = admin.deleteRoute(origin, destination);
+                    showMessageDialog(mesej);
                 }
                 case 2 -> showMessageDialog(admin.viewRoute());
             }
@@ -223,8 +223,8 @@ public class BusReservationSystem {
                     String timing = showInputDialog("Enter Schedule Timing to delete:");
                     if (timing == null)
                         return; // User cancelled
-                    admin.deleteSchedule(origin, destination, timing);
-                    showMessageDialog("Schedule deleted successfully.");
+                    String mesej = admin.deleteSchedule(origin, destination, timing);
+                    showMessageDialog(mesej);
                 }
                 case 2 -> showMessageDialog(route.getScheduleDetails());
             }

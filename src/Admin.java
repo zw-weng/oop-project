@@ -8,7 +8,8 @@ public class Admin extends User {
     private String staffID;
 
     public Admin(String name, String pwd, String email, int phoneNo, String staffID,
-                 ArrayList<Route> routeList, ArrayList<Bus> busList, ArrayList<Reservation> bookingList, ArrayList<Passenger> passengerList) {
+            ArrayList<Route> routeList, ArrayList<Bus> busList, ArrayList<Reservation> bookingList,
+            ArrayList<Passenger> passengerList) {
         super(name, pwd, email, phoneNo);
         this.staffID = staffID;
         this.routeList = routeList;
@@ -46,8 +47,14 @@ public class Admin extends User {
         busList.add(bus);
     }
 
-    public void deleteBus(String busID) {
-        busList.removeIf(bus -> bus.getBusID().equals(busID));
+    public String deleteBus(String busID) {
+        boolean removed = busList.removeIf(bus -> bus.getBusID().equals(busID));
+
+        if (!removed) {
+            return "Bus not found for ID: " + busID + ".";
+        } else {
+            return "Bus deleted successfully.";
+        }
     }
 
     public String viewBus() {
@@ -62,16 +69,23 @@ public class Admin extends User {
         routeList.add(route);
     }
 
-    public void deleteRoute(String origin, String destination) {
-        routeList.removeIf(route -> route.getOrigin().equals(origin) && route.getDestination().equals(destination));
+    public String deleteRoute(String origin, String destination) {
+        boolean removed = routeList
+                .removeIf(route -> route.getOrigin().equals(origin) && route.getDestination().equals(destination));
+
+        if (!removed) {
+            return "Route not found for origin: " + origin + " and destination: " + destination;
+        } else {
+            return "Route deleted successfully.";
+        }
     }
 
     public String viewRoute() {
         StringBuilder sb = new StringBuilder("Routes:\n");
         for (Route route : routeList) {
             sb.append("Origin: ").append(route.getOrigin())
-              .append(", Destination: ").append(route.getDestination())
-              .append(", Price: RM").append(route.getPrice()).append("\n");
+                    .append(", Destination: ").append(route.getDestination())
+                    .append(", Price: RM").append(route.getPrice()).append("\n");
         }
         return sb.toString();
     }
@@ -88,8 +102,8 @@ public class Admin extends User {
         StringBuilder sb = new StringBuilder("Passenger Info:\n");
         for (Passenger user : passengerList) {
             sb.append(user.getName()).append(" - Email: ")
-              .append(user.getEmail()).append(", Phone No: ")
-              .append(user.getPhoneNo()).append("\n");
+                    .append(user.getEmail()).append(", Phone No: ")
+                    .append(user.getPhoneNo()).append("\n");
         }
         return sb.toString();
     }
@@ -115,11 +129,17 @@ public class Admin extends User {
         }
     }
 
-    public void deleteSchedule(String origin, String destination, String timing) {
+    public String deleteSchedule(String origin, String destination, String timing) {
         Route route = findRoute(origin, destination);
         if (route != null) {
-            route.deleteSchedule(timing);
+            boolean scheduleDeleted = route.deleteSchedule(timing);
+            if (scheduleDeleted) {
+                return "Schedule deleted successfully.";
+            } else {
+                return "Schedule not found for departure time: " + timing + ".";
+            }
         }
+        return "";
     }
 
     // Getters and setters

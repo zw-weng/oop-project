@@ -80,7 +80,7 @@ public class Passenger extends User {
     public String viewRoutes(ArrayList<Route> routes) {
         StringBuilder sb = new StringBuilder("Available Routes:\n");
         for (Route route : routes) {
-            sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - ")
+            sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - RM")
                     .append(route.getPrice()).append("\n");
         }
         return sb.toString();

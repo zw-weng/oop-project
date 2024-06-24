@@ -30,7 +30,7 @@ public class Schedule {
     }
 
     public String getScheduleDetails() {
-        return "Timing: " + timing + ", Seats Available: " + seatsAvailable + "/" + seatLimit;
+        return "Departure Time: " + timing + ", Seats Available: " + seatsAvailable + "/" + seatLimit;
     }
 
     // Getters and Setters

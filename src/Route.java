@@ -20,8 +20,9 @@ public class Route {
     }
 
     // Delete a schedule from the route
-    public void deleteSchedule(String timing) {
-        scheduleList.removeIf(schedule -> schedule.getTiming().equals(timing));
+    public boolean deleteSchedule(String timing) {
+        boolean removed = scheduleList.removeIf(schedule -> schedule.getTiming().equals(timing));
+        return removed;
     }
 
     // Get schedule details
