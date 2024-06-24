@@ -18,6 +18,12 @@ public class Passenger extends User {
                 reservations.add(reservation);
                 allReservations.add(reservation);
             }
+            else {
+                return;
+            }
+        }
+        else {
+            return;
         }
     }
 

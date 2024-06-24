@@ -4,15 +4,17 @@ public class Admin extends User {
     private ArrayList<Route> routeList;
     private ArrayList<Bus> busList;
     private ArrayList<Reservation> bookingList;
+    private ArrayList<Passenger> passengerList;
     private String staffID;
 
     public Admin(String name, String pwd, String email, int phoneNo, String staffID,
-                 ArrayList<Route> routeList, ArrayList<Bus> busList, ArrayList<Reservation> bookingList) {
+                 ArrayList<Route> routeList, ArrayList<Bus> busList, ArrayList<Reservation> bookingList, ArrayList<Passenger> passengerList) {
         super(name, pwd, email, phoneNo);
         this.staffID = staffID;
         this.routeList = routeList;
         this.busList = busList;
         this.bookingList = bookingList;
+        this.passengerList = passengerList;
     }
 
     @Override
@@ -72,6 +74,16 @@ public class Admin extends User {
         return sb.toString();
     }
 
+    public String viewUser() {
+        StringBuilder sb = new StringBuilder("Passengers:\n");
+        for (Passenger user : passengerList) {
+            sb.append(user.getName()).append(" - Email: ")
+              .append(user.getEmail()).append(", Phone No: ")
+              .append(user.getPhoneNo()).append("\n\n");
+        }
+        return sb.toString();
+    }
+
     public Route findRoute(String origin, String destination) {
         for (Route route : routeList) {
             if (route.getOrigin().equals(origin) && route.getDestination().equals(destination)) {
@@ -123,6 +135,14 @@ public class Admin extends User {
 
     public void setBookingList(ArrayList<Reservation> bookingList) {
         this.bookingList = bookingList;
+    }
+
+    public ArrayList<Passenger> getPassengerList() {
+        return passengerList;
+    }
+
+    public void setPassengerList(ArrayList<Passenger> passengerList) {
+        this.passengerList = passengerList;
     }
 
     public String getStaffID() {

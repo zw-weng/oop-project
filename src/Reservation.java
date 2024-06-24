@@ -31,7 +31,7 @@ public class Reservation {
                "Passenger Name: " + passenger.getName() + "\n" +
                "Route: " + route.getOrigin() + " to " + route.getDestination() + "\n" +
                "Schedule: " + schedule.getTiming() + "\n" +
-               "Total Seats Booked: " + totalSeatsBooked;
+               "Total Seats Booked: " + totalSeatsBooked + "\n";
     }
 
     public String dispPaymentDetails() {

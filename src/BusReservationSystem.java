@@ -5,7 +5,7 @@ public class BusReservationSystem {
     private ArrayList<Route> routes;
     private ArrayList<Bus> buses;
     private ArrayList<Reservation> reservations;
-    private ArrayList<User> users;
+    private ArrayList<Passenger> users;
     private ArrayList<Admin> admins;
 
     public BusReservationSystem() {
@@ -36,7 +36,7 @@ public class BusReservationSystem {
         users.add(passenger1);
         users.add(passenger2);
 
-        Admin admin = new Admin("Admin User", "adminpass", "admin@example.com", 987654321, "A001", routes, buses, reservations);
+        Admin admin = new Admin("Admin User", "adminpass", "admin@example.com", 987654321, "A001", routes, buses, reservations, users);
         admins.add(admin);
 
         // Create some initial reservations
@@ -92,7 +92,7 @@ public class BusReservationSystem {
     }
 
     public void adminMenu(Admin admin) {
-        String[] options = {"Manage Buses", "Manage Routes", "Manage Schedules", "View Bookings", "Profile", "Logout"};
+        String[] options = {"Manage Buses", "Manage Routes", "Manage Schedules", "View Bookings", "View Passengers", "Profile", "Logout"};
         int choice;
 
         do {
@@ -103,13 +103,14 @@ public class BusReservationSystem {
                 case 1 -> manageRoutes(admin);
                 case 2 -> manageSchedules(admin);
                 case 3 -> showMessageDialog(admin.viewBooking());
-                case 4 -> viewOrUpdateProfile(admin);
-                case 5 -> {
+                case 4 -> showMessageDialog(admin.viewUser());
+                case 5 -> viewOrUpdateProfile(admin);
+                case 6 -> {
                     showMessageDialog("Thank you for using our system!");
                     System.exit(0);
                 }
             }
-        } while (choice != 5);
+        } while (choice != 6);
     }
 
     private void manageBuses(Admin admin) {
@@ -308,14 +309,28 @@ public class BusReservationSystem {
         int seats = Integer.parseInt(seatsStr);
 
         passenger.newBooking(routes, reservations, origin, destination, timing, seats);
-        showMessageDialog("Booking successful.");
+        String[] options = {"Continue with payment", "Back"};
+        int choice;
+
+        do {
+            choice = showOptionDialog("Route: " + origin + " to " + destination + "\n" +
+               "Schedule: " + timing + "\n" +
+               "Total Seats Booked: " + seatsStr, "Payment", options);
+
+            switch (choice) {
+                case 0 -> {
+                    showMessageDialog("Booking successful.");
+                    return;
+                }
+            }
+        } while (choice != 1);
     }
 
     private void cancelBooking(Passenger passenger) {
         String reservationID = showInputDialog("Enter Reservation ID to cancel:");
         if (reservationID == null) return;  // User cancelled
         passenger.cancelBooking(reservationID);
-        showMessageDialog("Booking canceled.");
+        showMessageDialog("Booking canceled. Please refund it at the counter.");
     }
 
     private void viewOrUpdateProfile(User user) {

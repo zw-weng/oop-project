@@ -16,7 +16,7 @@ public class Payment {
     public String generateReceipt() {
         return "Payment ID: " + paymentID + "\nReservation ID: " + reservation.getReservationID() +
                 "\nPassenger: " + reservation.getPassenger().getName() + "\nAmount: RM" + amount + "\nDate: "
-                + paymentDate.toString();
+                + paymentDate.toString() + "\n";
     }
 
     // Getters and Setters

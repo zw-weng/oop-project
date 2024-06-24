@@ -12,7 +12,7 @@ public class Ticket {
                "\nPassenger: " + reservation.getPassenger().getName() +
                "\nRoute: " + reservation.getRoute().getOrigin() + " to " + reservation.getRoute().getDestination() +
                "\nSchedule: " + reservation.getSchedule().getTiming() +
-               "\nTotal Seats Booked: " + reservation.getTotalSeatsBooked();
+               "\nTotal Seats Booked: " + reservation.getTotalSeatsBooked() + "\n";
     }
 
     // Getters and Setters
