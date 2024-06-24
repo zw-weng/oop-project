@@ -22,22 +22,31 @@ public class Passenger extends User {
     }
 
     public String viewBooking() {
-        StringBuilder sb = new StringBuilder("Your Bookings:\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Your Bookings:\n");
         for (Reservation reservation : reservations) {
-            sb.append(reservation.getReservationID()).append(" - ")
-              .append(reservation.getRoute().getOrigin()).append(" to ")
-              .append(reservation.getRoute().getDestination()).append(", ")
-              .append("Schedule: ").append(reservation.getSchedule().getTiming()).append(", ")
-              .append("Seats Booked: ").append(reservation.getTotalSeatsBooked()).append("\n");
+            sb.append(reservation.dispReservationDetails()).append("\n");
         }
         return sb.toString();
-    }
+    }    
 
     public void cancelBooking(String reservationID) {
         Reservation reservation = findReservation(reservationID);
         if (reservation != null) {
             reservations.remove(reservation);
         }
+    }
+
+    public String viewRoutes(ArrayList<Route> routes) {
+        StringBuilder sb = new StringBuilder("Available Routes:\n");
+        for (Route route : routes) {
+            sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - ").append(route.getPrice()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public String viewSchedule(Route route) {
+        return route.getScheduleDetails();
     }
 
     private Route findRoute(ArrayList<Route> routes, String origin, String destination) {
