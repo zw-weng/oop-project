@@ -267,7 +267,7 @@ public class BusReservationSystem {
                     }
                 }
                 case 2 -> newBooking(passenger);
-                case 3 -> showMessageDialog(passenger.viewBooking());
+                case 3 -> viewBooking(passenger);
                 case 4 -> cancelBooking(passenger);
                 case 5 -> viewOrUpdateProfile(passenger);
                 case 6 -> {
@@ -276,6 +276,24 @@ public class BusReservationSystem {
                 }
             }
         } while (choice != 6);
+    }
+
+    private void viewBooking(Passenger passenger) {
+        String[] options = {"Payment Receipt", "Ticket", "Back"};
+        int choice;
+
+        do {
+            choice = showOptionDialog(passenger.viewBooking(), "Reservations", options);
+
+            switch (choice) {
+                case 0 -> {
+                    showMessageDialog(passenger.viewPayment());
+                }
+                case 1 -> {
+                    showMessageDialog(passenger.viewTicket());
+                }
+            }
+        } while (choice != 2);
     }
 
     private void newBooking(Passenger passenger) {

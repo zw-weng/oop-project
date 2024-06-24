@@ -4,15 +4,19 @@ public class Payment {
     private String paymentID;
     private double amount;
     private Date paymentDate;
+    private Reservation reservation;
 
-    public Payment(String paymentID, double amount) {
+    public Payment(String paymentID, double amount, Reservation reservation) {
         this.paymentID = paymentID;
         this.amount = amount;
         this.paymentDate = new Date();
+        this.reservation = reservation;
     }
 
     public String generateReceipt() {
-        return "Receipt:\nPayment ID: " + paymentID + "\nAmount: RM" + amount + "\nDate: " + paymentDate.toString();
+        return "Payment ID: " + paymentID + "\nReservation ID: " + reservation.getReservationID() +
+                "\nPassenger: " + reservation.getPassenger().getName() + "\nAmount: RM" + amount + "\nDate: "
+                + paymentDate.toString();
     }
 
     // Getters and Setters

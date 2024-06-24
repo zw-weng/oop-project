@@ -19,7 +19,7 @@ public class Reservation {
 
     private void processPayment() {
         double amount = totalSeatsBooked * route.getPrice();
-        payment = new Payment("P" + reservationID, amount);
+        payment = new Payment("P" + reservationID, amount, this);
     }
 
     private void generateTicket() {
@@ -31,9 +31,15 @@ public class Reservation {
                "Passenger Name: " + passenger.getName() + "\n" +
                "Route: " + route.getOrigin() + " to " + route.getDestination() + "\n" +
                "Schedule: " + schedule.getTiming() + "\n" +
-               "Total Seats Booked: " + totalSeatsBooked + "\n" +
-               "Payment Details: \n" + payment.generateReceipt() + "\n" +
-               "Ticket Details: \n" + ticket.generateTicket();
+               "Total Seats Booked: " + totalSeatsBooked;
+    }
+
+    public String dispPaymentDetails() {
+        return payment.generateReceipt();
+    }
+
+    public String dispTicketDetails() {
+        return ticket.generateTicket();
     }
 
     // Getters and Setters

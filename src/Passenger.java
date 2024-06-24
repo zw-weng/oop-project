@@ -23,12 +23,29 @@ public class Passenger extends User {
 
     public String viewBooking() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Your Bookings:\n");
         for (Reservation reservation : reservations) {
             sb.append(reservation.dispReservationDetails()).append("\n");
         }
         return sb.toString();
-    }    
+    }
+    
+    public String viewPayment() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Your Payments:\n");
+        for (Reservation reservation : reservations) {
+            sb.append(reservation.dispPaymentDetails()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public String viewTicket() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Your Tickets:\n");
+        for (Reservation reservation : reservations) {
+            sb.append(reservation.dispTicketDetails()).append("\n");
+        }
+        return sb.toString();
+    }
 
     public void cancelBooking(String reservationID) {
         Reservation reservation = findReservation(reservationID);

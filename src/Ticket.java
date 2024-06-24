@@ -8,7 +8,7 @@ public class Ticket {
     }
 
     public String generateTicket() {
-        return "Ticket:\nTicket ID: " + ticketID + "\nReservation ID: " + reservation.getReservationID() +
+        return "Ticket ID: " + ticketID + "\nReservation ID: " + reservation.getReservationID() +
                "\nPassenger: " + reservation.getPassenger().getName() +
                "\nRoute: " + reservation.getRoute().getOrigin() + " to " + reservation.getRoute().getDestination() +
                "\nSchedule: " + reservation.getSchedule().getTiming() +
