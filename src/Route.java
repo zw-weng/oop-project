@@ -14,8 +14,8 @@ public class Route {
     }
 
     // Add a schedule to the route
-    public void addSchedule(String timing, int seatLimit) {
-        Schedule schedule = new Schedule(timing, this, seatLimit);
+    public void addSchedule(String timing, int seatLimit, int seatsAvailable) {
+        Schedule schedule = new Schedule(timing, this, seatLimit, seatsAvailable);
         scheduleList.add(schedule);
     }
 

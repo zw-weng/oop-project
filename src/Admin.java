@@ -79,7 +79,7 @@ public class Admin extends User {
         for (Passenger user : passengerList) {
             sb.append(user.getName()).append(" - Email: ")
               .append(user.getEmail()).append(", Phone No: ")
-              .append(user.getPhoneNo()).append("\n\n");
+              .append(user.getPhoneNo()).append("\n");
         }
         return sb.toString();
     }
@@ -101,7 +101,7 @@ public class Admin extends User {
     public void addSchedule(String origin, String destination, String timing, int seatLimit) {
         Route route = findRoute(origin, destination);
         if (route != null) {
-            route.addSchedule(timing, seatLimit);
+            route.addSchedule(timing, seatLimit, seatLimit);
         }
     }
 

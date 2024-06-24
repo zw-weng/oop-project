@@ -4,11 +4,11 @@ public class Schedule {
     private int seatLimit;
     private int seatsAvailable;
 
-    public Schedule(String timing, Route route, int seatLimit) {
+    public Schedule(String timing, Route route, int seatLimit, int seatsAvailable) {
         this.timing = timing;
         this.route = route;
         this.seatLimit = seatLimit;
-        this.seatsAvailable = seatLimit;
+        this.seatsAvailable = seatsAvailable;
     }
 
     public String bookSeat(int seats) {

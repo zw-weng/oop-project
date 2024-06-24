@@ -8,22 +8,28 @@ public class Passenger extends User {
         this.reservations = new ArrayList<>();
     }
 
-    public void newBooking(ArrayList<Route> routes, ArrayList<Reservation> allReservations, String origin, String destination, String timing, int seats) {
+    public String newBooking(ArrayList<Route> routes, ArrayList<Reservation> allReservations, String origin,
+            String destination, String timing, int seats) {
         Route selectedRoute = findRoute(routes, origin, destination);
         if (selectedRoute != null) {
             Schedule selectedSchedule = findSchedule(selectedRoute, timing);
             if (selectedSchedule != null) {
-                String reservationID = "R" + (allReservations.size() + 1);
-                Reservation reservation = new Reservation(reservationID, this, selectedRoute, selectedSchedule, seats);
-                reservations.add(reservation);
-                allReservations.add(reservation);
+                String bookingStatus = selectedSchedule.bookSeat(seats);
+                if (bookingStatus.startsWith("Seats booked successfully")) {
+                    String reservationID = "R" + (allReservations.size() + 1);
+                    Reservation reservation = new Reservation(reservationID, this, selectedRoute, selectedSchedule,
+                            seats);
+                    reservations.add(reservation);
+                    allReservations.add(reservation);
+                    return bookingStatus;
+                } else {
+                    return bookingStatus;
+                }
+            } else {
+                return "Schedule at " + timing + " not found for route " + origin + " to " + destination + ".";
             }
-            else {
-                return;
-            }
-        }
-        else {
-            return;
+        } else {
+            return "Route from " + origin + " to " + destination + " not found.";
         }
     }
 
@@ -34,7 +40,7 @@ public class Passenger extends User {
         }
         return sb.toString();
     }
-    
+
     public String viewPayment() {
         StringBuilder sb = new StringBuilder();
         sb.append("Your Payments:\n");
@@ -53,17 +59,29 @@ public class Passenger extends User {
         return sb.toString();
     }
 
-    public void cancelBooking(String reservationID) {
+    public String cancelBooking(String reservationID, ArrayList<Reservation> allReservations) {
         Reservation reservation = findReservation(reservationID);
         if (reservation != null) {
-            reservations.remove(reservation);
+            Schedule schedule = reservation.getSchedule();
+            int seatsToCancel = reservation.getTotalSeatsBooked();
+            String cancelStatus = schedule.cancelSeat(seatsToCancel);
+            if (cancelStatus.startsWith("Seats canceled successfully")) {
+                reservations.remove(reservation);
+                allReservations.remove(reservation);
+                return cancelStatus;
+            } else {
+                return cancelStatus;
+            }
+        } else {
+            return "Reservation with ID " + reservationID + " not found.";
         }
     }
 
     public String viewRoutes(ArrayList<Route> routes) {
         StringBuilder sb = new StringBuilder("Available Routes:\n");
         for (Route route : routes) {
-            sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - ").append(route.getPrice()).append("\n");
+            sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - ")
+                    .append(route.getPrice()).append("\n");
         }
         return sb.toString();
     }
