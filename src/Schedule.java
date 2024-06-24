@@ -1,5 +1,3 @@
-import javax.swing.*;
-
 public class Schedule {
     private String timing;
     private Route route;
@@ -13,21 +11,21 @@ public class Schedule {
         this.seatsAvailable = seatLimit;
     }
 
-    public void bookSeat(int seats) {
+    public String bookSeat(int seats) {
         if (seatsAvailable >= seats) {
             seatsAvailable -= seats;
-            JOptionPane.showMessageDialog(null, "Seats booked successfully. Seats available: " + seatsAvailable);
+            return "Seats booked successfully. Seats available: " + seatsAvailable;
         } else {
-            JOptionPane.showMessageDialog(null, "Not enough seats available.");
+            return "Not enough seats available.";
         }
     }
 
-    public void cancelSeat(int seats) {
+    public String cancelSeat(int seats) {
         if (seats <= seatLimit - seatsAvailable) {
             seatsAvailable += seats;
-            JOptionPane.showMessageDialog(null, "Seats canceled successfully. Seats available: " + seatsAvailable);
+            return "Seats canceled successfully. Seats available: " + seatsAvailable;
         } else {
-            JOptionPane.showMessageDialog(null, "No seats to cancel.");
+            return "No seats to cancel.";
         }
     }
 

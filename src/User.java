@@ -1,6 +1,4 @@
-import javax.swing.*;
-
-public class User {
+public abstract class User {
     private String name;
     private String pwd;
     private String email;
@@ -29,41 +27,41 @@ public class User {
         this.phoneNo = phoneNo;
     }
 
-    public void updateProfile() {
-        String newName = JOptionPane.showInputDialog("Enter new name:", name);
+    public String[] updateProfileData() {
+        return new String[] {name, pwd, email, String.valueOf(phoneNo)};
+    }
+
+    public void updateProfile(String newName, String newPwd, String newEmail, String newPhoneStr) {
         if (newName != null && !newName.trim().isEmpty()) {
             setName(newName);
         }
 
-        String newPwd = JOptionPane.showInputDialog("Enter new password:");
         if (newPwd != null && !newPwd.trim().isEmpty()) {
             setPwd(newPwd);
         }
 
-        String newEmail = JOptionPane.showInputDialog("Enter new email:", email);
         if (newEmail != null && !newEmail.trim().isEmpty()) {
             setEmail(newEmail);
         }
 
-        String newPhoneStr = JOptionPane.showInputDialog("Enter new phone number:", phoneNo);
         if (newPhoneStr != null && !newPhoneStr.trim().isEmpty()) {
             try {
                 int newPhoneNo = Integer.parseInt(newPhoneStr);
                 setPhone(newPhoneNo);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Invalid phone number. Please enter a valid number.");
+                throw new IllegalArgumentException("Invalid phone number. Please enter a valid number.");
             }
         }
-
-        JOptionPane.showMessageDialog(null, "Profile updated successfully.");
     }
 
-    public void dispProfile() {
-        String profile = "Name: " + name + "\n" +
-                         "Email: " + email + "\n" +
-                         "Phone No: " + phoneNo;
-        JOptionPane.showMessageDialog(null, profile);
+    public String dispProfile() {
+        return "Name: " + name + "\n" +
+               "Email: " + email + "\n" +
+               "Phone No: " + phoneNo;
     }
+
+    // Abstract methods to ensure polymorphism
+    public abstract void menu(BusReservationSystem system);
 
     // Getters
     public String getName() {

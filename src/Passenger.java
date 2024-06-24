@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class Passenger extends User {
@@ -9,30 +8,20 @@ public class Passenger extends User {
         this.reservations = new ArrayList<>();
     }
 
-    public void newBooking(ArrayList<Route> routes, ArrayList<Reservation> allReservations) {
-        String origin = JOptionPane.showInputDialog("Enter Route Origin:");
-        String destination = JOptionPane.showInputDialog("Enter Route Destination:");
-        String timing = JOptionPane.showInputDialog("Enter Schedule Timing:");
-        int seats = Integer.parseInt(JOptionPane.showInputDialog("Enter number of seats to book:"));
-
+    public void newBooking(ArrayList<Route> routes, ArrayList<Reservation> allReservations, String origin, String destination, String timing, int seats) {
         Route selectedRoute = findRoute(routes, origin, destination);
         if (selectedRoute != null) {
             Schedule selectedSchedule = findSchedule(selectedRoute, timing);
             if (selectedSchedule != null) {
                 String reservationID = "R" + (allReservations.size() + 1);
                 Reservation reservation = new Reservation(reservationID, this, selectedRoute, selectedSchedule, seats);
-                reservation.makeReservation();
                 reservations.add(reservation);
                 allReservations.add(reservation);
-            } else {
-                JOptionPane.showMessageDialog(null, "Schedule not found.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Route not found.");
         }
     }
 
-    public void viewBooking() {
+    public String viewBooking() {
         StringBuilder sb = new StringBuilder("Your Bookings:\n");
         for (Reservation reservation : reservations) {
             sb.append(reservation.getReservationID()).append(" - ")
@@ -41,17 +30,13 @@ public class Passenger extends User {
               .append("Schedule: ").append(reservation.getSchedule().getTiming()).append(", ")
               .append("Seats Booked: ").append(reservation.getTotalSeatsBooked()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString());
+        return sb.toString();
     }
 
-    public void cancelBooking() {
-        String reservationID = JOptionPane.showInputDialog("Enter Reservation ID to cancel:");
+    public void cancelBooking(String reservationID) {
         Reservation reservation = findReservation(reservationID);
         if (reservation != null) {
-            reservation.cancelReservation();
             reservations.remove(reservation);
-        } else {
-            JOptionPane.showMessageDialog(null, "Reservation not found.");
         }
     }
 
@@ -80,6 +65,11 @@ public class Passenger extends User {
             }
         }
         return null;
+    }
+
+    @Override
+    public void menu(BusReservationSystem system) {
+        system.passengerMenu(this);
     }
 
     // Getters and Setters

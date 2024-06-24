@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class Route {
@@ -20,20 +19,21 @@ public class Route {
         scheduleList.add(schedule);
     }
 
-    // Display Route details
-    public void dispRouteDetails() {
+    // Delete a schedule from the route
+    public void deleteSchedule(String timing) {
+        scheduleList.removeIf(schedule -> schedule.getTiming().equals(timing));
+    }
+
+    // Get schedule details
+    public String getScheduleDetails() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Route Details:\n")
-          .append("Origin: ").append(origin).append("\n")
-          .append("Destination: ").append(destination).append("\n")
-          .append("Price: ").append(price).append("\n")
-          .append("Schedules:\n");
+        sb.append("Schedules for route ").append(origin).append(" to ").append(destination).append(":\n");
         
         for (Schedule schedule : scheduleList) {
             sb.append(schedule.getScheduleDetails()).append("\n");
         }
 
-        JOptionPane.showMessageDialog(null, sb.toString());
+        return sb.toString();
     }
 
     // Getters and Setters

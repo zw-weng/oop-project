@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class Admin extends User {
@@ -17,72 +16,88 @@ public class Admin extends User {
     }
 
     @Override
-    public void updateProfile() {
-        super.updateProfile();
-
-        String newStaffID = JOptionPane.showInputDialog("Enter new staff ID:", staffID);
-        if (newStaffID != null && !newStaffID.trim().isEmpty()) {
-            setStaffID(newStaffID);
-        }
-
-        JOptionPane.showMessageDialog(null, "Admin profile updated successfully.");
+    public String dispProfile() {
+        return super.dispProfile() + "\n" + "Staff ID: " + staffID;
     }
 
     @Override
-    public void dispProfile() {
-        String profile = "Name: " + getName() + "\n" +
-                         "Email: " + getEmail() + "\n" +
-                         "Phone No: " + getPhoneNo() + "\n" +
-                         "Staff ID: " + staffID;
-        JOptionPane.showMessageDialog(null, profile);
+    public void updateProfile(String newName, String newPwd, String newEmail, String newPhoneStr) {
+        super.updateProfile(newName, newPwd, newEmail, newPhoneStr);
+        if (newPhoneStr != null && !newPhoneStr.trim().isEmpty()) {
+            setStaffID(newPhoneStr);
+        }
     }
 
     public void addBus(Bus bus) {
         busList.add(bus);
-        JOptionPane.showMessageDialog(null, "Bus added successfully.");
     }
 
     public void deleteBus(String busID) {
         busList.removeIf(bus -> bus.getBusID().equals(busID));
-        JOptionPane.showMessageDialog(null, "Bus deleted successfully.");
     }
 
-    public void viewBus() {
+    public String viewBus() {
         StringBuilder sb = new StringBuilder("Buses:\n");
         for (Bus bus : busList) {
-            sb.append(bus.getBusID()).append(" - ").append(bus.getModel()).append("\n");
+            sb.append(bus.toString()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString());
+        return sb.toString();
     }
 
     public void addRoute(Route route) {
         routeList.add(route);
-        JOptionPane.showMessageDialog(null, "Route added successfully.");
     }
 
     public void deleteRoute(String origin, String destination) {
         routeList.removeIf(route -> route.getOrigin().equals(origin) && route.getDestination().equals(destination));
-        JOptionPane.showMessageDialog(null, "Route deleted successfully.");
     }
 
-    public void viewRoute() {
+    public String viewRoute() {
         StringBuilder sb = new StringBuilder("Routes:\n");
         for (Route route : routeList) {
             sb.append("Origin: ").append(route.getOrigin())
               .append(", Destination: ").append(route.getDestination())
-              .append(", Price: ").append(route.getPrice()).append("\n");
+              .append(", Price: RM").append(route.getPrice()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString());
+        return sb.toString();
     }
 
-    public void viewBooking() {
+    public String viewBooking() {
         StringBuilder sb = new StringBuilder("Bookings:\n");
         for (Reservation reservation : bookingList) {
             sb.append(reservation.getReservationID()).append(" - ")
               .append(reservation.getPassenger().getName()).append(", ")
               .append("Route: ").append(reservation.getRoute().getOrigin()).append(" to ").append(reservation.getRoute().getDestination()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString());
+        return sb.toString();
+    }
+
+    public Route findRoute(String origin, String destination) {
+        for (Route route : routeList) {
+            if (route.getOrigin().equals(origin) && route.getDestination().equals(destination)) {
+                return route;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void menu(BusReservationSystem system) {
+        system.adminMenu(this);
+    }
+
+    public void addSchedule(String origin, String destination, String timing, int seatLimit) {
+        Route route = findRoute(origin, destination);
+        if (route != null) {
+            route.addSchedule(timing, seatLimit);
+        }
+    }
+
+    public void deleteSchedule(String origin, String destination, String timing) {
+        Route route = findRoute(origin, destination);
+        if (route != null) {
+            route.deleteSchedule(timing);
+        }
     }
 
     // Getters and setters

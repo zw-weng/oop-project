@@ -32,8 +32,7 @@ public class BusReservationSystem {
 
     public void start() {
         String[] options = {"Admin", "Passenger"};
-        int choice = JOptionPane.showOptionDialog(null, "Are you an admin or a passenger?", "Login",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        int choice = showOptionDialog("Are you an admin or a passenger?", "Login", options);
 
         if (choice == 0) {
             adminLogin();
@@ -43,14 +42,22 @@ public class BusReservationSystem {
     }
 
     private void adminLogin() {
-        String email = JOptionPane.showInputDialog("Enter email:");
-        String password = JOptionPane.showInputDialog("Enter password:");
+        while (true) {
+            String email = showInputDialog("Enter email:");
+            if (email == null) {
+                start();
+            }
+            String password = showInputDialog("Enter password:");
+            if (password == null) {
+                start();
+            }
 
-        Admin admin = authenticateAdmin(email, password);
-        if (admin != null) {
-            adminMenu(admin);
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid credentials.");
+            Admin admin = authenticateAdmin(email, password);
+            if (admin != null) {
+                admin.menu(this);
+            } else {
+                showMessageDialog("Invalid credentials. Please try again.");
+            }
         }
     }
 
@@ -63,21 +70,25 @@ public class BusReservationSystem {
         return null;
     }
 
-    private void adminMenu(Admin admin) {
-        String[] options = {"Manage Buses", "Manage Routes", "View Bookings", "Profile", "Logout"};
+    public void adminMenu(Admin admin) {
+        String[] options = {"Manage Buses", "Manage Routes", "Manage Schedules", "View Bookings", "Profile", "Logout"};
         int choice;
 
         do {
-            choice = JOptionPane.showOptionDialog(null, "Admin Menu", "Menu",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            choice = showOptionDialog("Admin Menu", "Menu", options);
 
             switch (choice) {
                 case 0 -> manageBuses(admin);
                 case 1 -> manageRoutes(admin);
-                case 2 -> admin.viewBooking();
-                case 3 -> admin.updateProfile();
+                case 2 -> manageSchedules(admin);
+                case 3 -> showMessageDialog(admin.viewBooking());
+                case 4 -> viewOrUpdateProfile(admin);
+                case 5 -> {
+                    showMessageDialog("Thank you for using our system");
+                    return;
+                }
             }
-        } while (choice != 4);
+        } while (choice != 5);
     }
 
     private void manageBuses(Admin admin) {
@@ -85,21 +96,22 @@ public class BusReservationSystem {
         int choice;
 
         do {
-            choice = JOptionPane.showOptionDialog(null, "Manage Buses", "Buses",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            choice = showOptionDialog("Manage Buses", "Buses", options);
 
             switch (choice) {
                 case 0 -> {
-                    String busID = JOptionPane.showInputDialog("Enter Bus ID:");
-                    String model = JOptionPane.showInputDialog("Enter Bus Model:");
-                    int capacity = Integer.parseInt(JOptionPane.showInputDialog("Enter Bus Capacity:"));
+                    String busID = showInputDialog("Enter Bus ID:");
+                    String model = showInputDialog("Enter Bus Model:");
+                    int capacity = Integer.parseInt(showInputDialog("Enter Bus Capacity:"));
                     admin.addBus(new Bus(busID, model, capacity));
+                    showMessageDialog("Bus added successfully.");
                 }
                 case 1 -> {
-                    String busID = JOptionPane.showInputDialog("Enter Bus ID to delete:");
+                    String busID = showInputDialog("Enter Bus ID to delete:");
                     admin.deleteBus(busID);
+                    showMessageDialog("Bus deleted successfully.");
                 }
-                case 2 -> admin.viewBus();
+                case 2 -> showMessageDialog(admin.viewBus());
             }
         } while (choice != 3);
     }
@@ -109,35 +121,77 @@ public class BusReservationSystem {
         int choice;
 
         do {
-            choice = JOptionPane.showOptionDialog(null, "Manage Routes", "Routes",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            choice = showOptionDialog("Manage Routes", "Routes", options);
 
             switch (choice) {
                 case 0 -> {
-                    String origin = JOptionPane.showInputDialog("Enter Route Origin:");
-                    String destination = JOptionPane.showInputDialog("Enter Route Destination:");
-                    double price = Double.parseDouble(JOptionPane.showInputDialog("Enter Route Price:"));
+                    String origin = showInputDialog("Enter Route Origin:");
+                    String destination = showInputDialog("Enter Route Destination:");
+                    double price = Double.parseDouble(showInputDialog("Enter Route Price:"));
                     admin.addRoute(new Route(origin, destination, price));
+                    showMessageDialog("Route added successfully.");
                 }
                 case 1 -> {
-                    String origin = JOptionPane.showInputDialog("Enter Route Origin to delete:");
-                    String destination = JOptionPane.showInputDialog("Enter Route Destination to delete:");
+                    String origin = showInputDialog("Enter Route Origin to delete:");
+                    String destination = showInputDialog("Enter Route Destination to delete:");
                     admin.deleteRoute(origin, destination);
+                    showMessageDialog("Route deleted successfully.");
                 }
-                case 2 -> admin.viewRoute();
+                case 2 -> showMessageDialog(admin.viewRoute());
+            }
+        } while (choice != 3);
+    }
+
+    private void manageSchedules(Admin admin) {
+        String origin = showInputDialog("Enter Route Origin:");
+        String destination = showInputDialog("Enter Route Destination:");
+        Route route = admin.findRoute(origin, destination);
+
+        if (route == null) {
+            showMessageDialog("Route not found.");
+            return;
+        }
+
+        String[] options = {"Add Schedule", "Delete Schedule", "View Schedules", "Back"};
+        int choice;
+
+        do {
+            choice = showOptionDialog("Manage Schedules for route " + origin + " to " + destination, "Schedules", options);
+
+            switch (choice) {
+                case 0 -> {
+                    String timing = showInputDialog("Enter Schedule Timing:");
+                    int seatLimit = Integer.parseInt(showInputDialog("Enter Seat Limit:"));
+                    admin.addSchedule(origin, destination, timing, seatLimit);
+                    showMessageDialog("Schedule added successfully.");
+                }
+                case 1 -> {
+                    String timing = showInputDialog("Enter Schedule Timing to delete:");
+                    admin.deleteSchedule(origin, destination, timing);
+                    showMessageDialog("Schedule deleted successfully.");
+                }
+                case 2 -> showMessageDialog(route.getScheduleDetails());
             }
         } while (choice != 3);
     }
 
     private void passengerLogin() {
-        String email = JOptionPane.showInputDialog("Enter email:");
-        String password = JOptionPane.showInputDialog("Enter password:");
+        while (true) {
+            String email = showInputDialog("Enter email:");
+            if (email == null) {
+                start();
+            }
+            String password = showInputDialog("Enter password:");
+            if (password == null) {
+                start();
+            }
 
-        Passenger passenger = authenticatePassenger(email, password);
-        if (passenger != null) {
-            passengerMenu(passenger);
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid credentials.");
+            Passenger passenger = authenticatePassenger(email, password);
+            if (passenger != null) {
+                passenger.menu(this);
+            } else {
+                showMessageDialog("Invalid credentials. Please try again.");
+            }
         }
     }
 
@@ -150,20 +204,23 @@ public class BusReservationSystem {
         return null;
     }
 
-    private void passengerMenu(Passenger passenger) {
+    public void passengerMenu(Passenger passenger) {
         String[] options = {"View Routes", "New Booking", "View Bookings", "Cancel Booking", "Profile", "Logout"};
         int choice;
 
         do {
-            choice = JOptionPane.showOptionDialog(null, "Passenger Menu", "Menu",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            choice = showOptionDialog("Passenger Menu", "Menu", options);
 
             switch (choice) {
                 case 0 -> viewRoutes();
-                case 1 -> passenger.newBooking(routes, reservations);
-                case 2 -> passenger.viewBooking();
-                case 3 -> passenger.cancelBooking();
-                case 4 -> passenger.updateProfile();
+                case 1 -> newBooking(passenger);
+                case 2 -> showMessageDialog(passenger.viewBooking());
+                case 3 -> cancelBooking(passenger);
+                case 4 -> viewOrUpdateProfile(passenger);
+                case 5 -> {
+                    showMessageDialog("Thank you for using our system");
+                    return;
+                }
             }
         } while (choice != 5);
     }
@@ -173,7 +230,63 @@ public class BusReservationSystem {
         for (Route route : routes) {
             sb.append(route.getOrigin()).append(" to ").append(route.getDestination()).append(" - ").append(route.getPrice()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, sb.toString());
+        showMessageDialog(sb.toString());
+    }
+
+    private void newBooking(Passenger passenger) {
+        String origin = showInputDialog("Enter Route Origin:");
+        String destination = showInputDialog("Enter Route Destination:");
+        String timing = showInputDialog("Enter Schedule Timing:");
+        int seats = Integer.parseInt(showInputDialog("Enter number of seats to book:"));
+
+        passenger.newBooking(routes, reservations, origin, destination, timing, seats);
+        showMessageDialog("Booking successful.");
+    }
+
+    private void cancelBooking(Passenger passenger) {
+        String reservationID = showInputDialog("Enter Reservation ID to cancel:");
+        passenger.cancelBooking(reservationID);
+        showMessageDialog("Booking canceled.");
+    }
+
+    private void viewOrUpdateProfile(User user) {
+        showMessageDialog(user.dispProfile());
+        int choice = showOptionDialog("Do you want to update your profile?", "Profile", new String[]{"Yes", "No"});
+        if (choice == 0) {
+            updateProfile(user);
+        }
+    }
+
+    private void updateProfile(User user) {
+        String[] profileData = user.updateProfileData();
+        String newName = showInputDialog("Enter new name:", profileData[0]);
+        String newPwd = showInputDialog("Enter new password:", profileData[1]);
+        String newEmail = showInputDialog("Enter new email:", profileData[2]);
+        String newPhoneStr = showInputDialog("Enter new phone number:", profileData[3]);
+
+        try {
+            user.updateProfile(newName, newPwd, newEmail, newPhoneStr);
+            showMessageDialog("Profile updated successfully.");
+        } catch (IllegalArgumentException e) {
+            showMessageDialog(e.getMessage());
+        }
+    }
+
+    // Methods for interacting with JOptionPane
+    public String showInputDialog(String message) {
+        return JOptionPane.showInputDialog(message);
+    }
+
+    public String showInputDialog(String message, String initialSelectionValue) {
+        return JOptionPane.showInputDialog(null, message, initialSelectionValue);
+    }
+
+    public void showMessageDialog(String message) {
+        JOptionPane.showMessageDialog(null, message);
+    }
+
+    public int showOptionDialog(String message, String title, String[] options) {
+        return JOptionPane.showOptionDialog(null, message, title, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,4 @@
 import java.util.Date;
-import javax.swing.*;
 
 public class Payment {
     private String paymentID;
@@ -10,10 +9,6 @@ public class Payment {
         this.paymentID = paymentID;
         this.amount = amount;
         this.paymentDate = new Date();
-    }
-
-    public void processPayment() {
-        JOptionPane.showMessageDialog(null, "Payment of RM" + amount + " processed successfully.");
     }
 
     public String generateReceipt() {
