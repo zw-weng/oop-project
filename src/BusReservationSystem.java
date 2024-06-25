@@ -232,25 +232,68 @@ public class BusReservationSystem {
     }
 
     public void passengerLogin() {
-        while (true) {
-            String email = showInputDialog("Enter email:");
-            if (email == null) {
-                start();
-                return; // User cancelled, return to login page
-            }
-            String password = showInputDialog("Enter password:");
-            if (password == null) {
-                start();
-                return; // User cancelled, return to login page
-            }
+        String[] options = { "Login", "Register" };
+        int choice = showOptionDialog("Do you want to login or register?", "Passenger", options);
 
-            Passenger passenger = authenticatePassenger(email, password);
-            if (passenger != null) {
-                passenger.menu(this);
-                return;
-            } else {
-                showMessageDialog("Invalid credentials. Please try again.");
+        if (choice == 0) {
+            while (true) {
+                String email = showInputDialog("Enter email:");
+                if (email == null) {
+                    start();
+                    return; // User cancelled, return to login page
+                }
+                String password = showInputDialog("Enter password:");
+                if (password == null) {
+                    start();
+                    return; // User cancelled, return to login page
+                }
+
+                Passenger passenger = authenticatePassenger(email, password);
+                if (passenger != null) {
+                    passenger.menu(this);
+                    return;
+                } else {
+                    showMessageDialog("Invalid credentials. Please try again.");
+                }
             }
+        } else if (choice == 1) {
+            registerPassenger();
+        } else {
+            start();
+        }
+    }
+
+    public void registerPassenger() {
+        String name = showInputDialog("Enter your name:");
+        if (name == null) {
+            start();
+            return; // User cancelled
+        }
+        String email = showInputDialog("Enter your email:");
+        if (email == null) {
+            start();
+            return; // User cancelled
+        }
+        String password = showInputDialog("Enter your password:");
+        if (password == null) {
+            start();
+            return; // User cancelled
+        }
+        String phoneNoStr = showInputDialog("Enter your phone number:");
+        if (phoneNoStr == null) {
+            start();
+            return; // User cancelled
+        }
+
+        try {
+            int phoneNo = Integer.parseInt(phoneNoStr);
+            Passenger newPassenger = new Passenger(name, password, email, phoneNo);
+            users.add(newPassenger);
+            showMessageDialog("Registration successful. You can now log in.");
+            passengerLogin();
+        } catch (NumberFormatException e) {
+            showMessageDialog("Invalid phone number. Please enter a valid number.");
+            registerPassenger();
         }
     }
 
@@ -380,28 +423,33 @@ public class BusReservationSystem {
     public void updateProfile(User user) {
         String[] profileData = user.updateProfileData();
         String newName = showInputDialog("Enter new name:", profileData[0]);
-        if (newName == null) return; // User cancelled
+        if (newName == null)
+            return; // User cancelled
         String newPwd = showInputDialog("Enter new password:", profileData[1]);
-        if (newPwd == null) return; // User cancelled
+        if (newPwd == null)
+            return; // User cancelled
         String newEmail = showInputDialog("Enter new email:", profileData[2]);
-        if (newEmail == null) return; // User cancelled
+        if (newEmail == null)
+            return; // User cancelled
         String newPhoneStr = showInputDialog("Enter new phone number:", profileData[3]);
-        if (newPhoneStr == null) return; // User cancelled
-        
+        if (newPhoneStr == null)
+            return; // User cancelled
+
         if (user instanceof Admin) {
             Admin admin = (Admin) user;
             String newStaffID = showInputDialog("Enter new staff ID:", admin.getStaffID());
-            if (newStaffID == null) return; // User cancelled
+            if (newStaffID == null)
+                return; // User cancelled
             admin.setStaffID(newStaffID);
         }
-    
+
         try {
             user.updateProfile(newName, newPwd, newEmail, newPhoneStr);
             showMessageDialog("Profile updated successfully.");
         } catch (IllegalArgumentException e) {
             showMessageDialog(e.getMessage());
         }
-    }    
+    }
 
     // Methods for interacting with JOptionPane
     public String showInputDialog(String message) {
