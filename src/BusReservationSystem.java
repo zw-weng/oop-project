@@ -108,8 +108,8 @@ public class BusReservationSystem {
                 case 4 -> showMessageDialog(admin.viewUser());
                 case 5 -> viewOrUpdateProfile(admin);
                 case 6 -> {
-                    showMessageDialog("Thank you for using our system!");
-                    System.exit(0);
+                    showMessageDialog("Thank you! See you again...");
+                    start();
                 }
             }
         } while (choice != 6);
@@ -322,8 +322,8 @@ public class BusReservationSystem {
                 case 4 -> cancelBooking(passenger);
                 case 5 -> viewOrUpdateProfile(passenger);
                 case 6 -> {
-                    showMessageDialog("Thank you for using our system!");
-                    System.exit(0);
+                    showMessageDialog("Thank you! See you again...");
+                    start();
                 }
             }
         } while (choice != 6);
